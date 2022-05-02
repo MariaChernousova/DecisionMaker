@@ -8,20 +8,20 @@
 import Foundation
 
 enum AlternativeRowComponent: CaseIterable {
-    case alternative(AlternativesDataConfigurator)
-    case button(MainButtonDataConfigurator)
+    case alternative(AlternativesCellDataConfigurator)
+    case result(AlternativeResultCellDataConfigurator)
     
     static let allCases: [AlternativeRowComponent] = [
-        .alternative(AlternativesDataConfigurator.empty),
-        .button(MainButtonDataConfigurator.empty)
+        .alternative(AlternativesCellDataConfigurator.empty),
+        .result(AlternativeResultCellDataConfigurator.empty)
     ]
     
     var dataConfigurable: TableViewCellConfigurable {
         switch self {
         case .alternative(let alternativesDataConfigurator):
             return alternativesDataConfigurator
-        case .button(let mainButtonDataConfigurator):
-            return mainButtonDataConfigurator
+        case .result(let alternativeResultCellDataConfigurator):
+            return alternativeResultCellDataConfigurator
         }
     }
 }

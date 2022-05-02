@@ -10,18 +10,12 @@ import Foundation
 class SettingsViewModel: MainViewModelProvider {
     
     private enum Alternative: CaseIterable {
-        case best
-        case incomparable
-        case worst
+        case selected
         
         var title: String {
             switch self {
-            case .best:
-                return "The Best:"
-            case .incomparable:
-                return "Incomparable:"
-            case .worst:
-                return "The Worst:"
+            case .selected:
+                return "Selected alternative:"
             }
         }
         
@@ -94,36 +88,8 @@ class SettingsViewModel: MainViewModelProvider {
         let endIndex = inputData.firstCriterion * inputData.secondCriterion * inputData.thirdCriterion * inputData.fourthCriterion
 
         switch alternative {
-        case .best:
-            if let incomparableValue = alternativeValues[.incomparable] {
-                return (1..<incomparableValue).map { $0 }
-            } else if let worstValue = alternativeValues[.worst] {
-                return (1..<worstValue - 1).map { $0 }
-            } else if let incomparableValue = alternativeValues[.incomparable],
-                      alternativeValues[.worst] != nil {
-                return (1..<incomparableValue).map { $0 }
-            }
-            return (1..<(endIndex - 1)).map { $0 }
-        case .incomparable:
-            if let bestValue = alternativeValues[.best] {
-                return ((bestValue + 1)...(endIndex - 1)).map { $0 }
-            } else if let worstValue = alternativeValues[.worst] {
-                return (2..<worstValue).map { $0 }
-            } else if let bestValue = alternativeValues[.best],
-                      let worstValue = alternativeValues[.worst] {
-                return ((bestValue + 1)...(worstValue - 1)).map { $0 }
-            }
-            return (2..<endIndex).map { $0 }
-        case .worst:
-            if alternativeValues[.best] != nil,
-                let incomparableValue = alternativeValues[.incomparable] {
-                return ((incomparableValue + 1)...endIndex).map { $0 }
-            } else if let bestValue = alternativeValues[.best] {
-                return ((bestValue + 1)...endIndex).map { $0 }
-            } else if let incomparableValue = alternativeValues[.incomparable] {
-                return ((incomparableValue + 1)...endIndex).map { $0 }
-            }
-            return (3...endIndex).map { $0 }
+        case .selected:
+            return (1...endIndex).map { $0 }
         }
     }
     
@@ -133,15 +99,11 @@ class SettingsViewModel: MainViewModelProvider {
     }
     
     private func configureSettings() -> Settings? {
-        guard let bestAlternative = alternativeValues[.best],
-              let incomparableAlternative = alternativeValues[.incomparable],
-              let worstAlternative = alternativeValues[.worst],
+        guard let selectedAlternative = alternativeValues[.selected],
               let inputData = inputData else { return nil }
          return Settings(
             inputData: inputData,
-            theBestAlternative: bestAlternative,
-            incomparableAlternative: incomparableAlternative,
-            theWorstAlternative: worstAlternative
+            selectedAlternative: selectedAlternative
          )
     }
     

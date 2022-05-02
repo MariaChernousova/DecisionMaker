@@ -31,6 +31,7 @@ class AlternativesViewModel: AlternativesViewModelProvider {
     func didLoad() {
         if let inputDataSettable = inputDataSettable {
             service.getDecision(from: inputDataSettable)
+            service.filterResult(from: inputDataSettable)
         } else if let inputData = inputData {
             service.getDecision(from: inputData)
         }
@@ -39,18 +40,41 @@ class AlternativesViewModel: AlternativesViewModelProvider {
     
     private func triggerUpdateAction() {
         let result = service.result
-        let alternativeDecorator = result.map { iterationResult in
+        let theBestResultRows = service.theBestResultRows
+        let incomparableResultRows = service.incomparableResultRows
+        let theWorstResultRows = service.theWorstResultRows
+        let selectedResultRows = service.selectedResultRows
+        var alternativeDecorator = result.map { iterationResult in
             AlternativeDecorator(
                 .alternative(
-                    AlternativesDataConfigurator(
+                    AlternativesCellDataConfigurator(
                         iterationTitle: "\(iterationResult.iteration)",
-                        firstCriterionTitle: iterationResult.firstCriterionResult,
-                        secondCriterionTitle: iterationResult.secondCriterionResult,
-                        thirdCriterionTitle: iterationResult.thirdCriterionResult,
-                        fourthCriterionTitle: iterationResult.fourthCriterionResult)
+                        firstCriterionTitle: "K1:\(iterationResult.firstCriterionResult)",
+                        secondCriterionTitle: "K2:\(iterationResult.secondCriterionResult)",
+                        thirdCriterionTitle: "K3:\(iterationResult.thirdCriterionResult)",
+                        fourthCriterionTitle: "K4:\(iterationResult.fourthCriterionResult)",
+                        theBestResultRows: theBestResultRows,
+                        incomparableResultRows: incomparableResultRows,
+                        theWorstResultRows: theWorstResultRows,
+                        selectedResultRows: selectedResultRows
+                    )
                 )
             )
-            
+        }
+        if theBestResultRows != [],
+           incomparableResultRows != [],
+           theWorstResultRows != [] {
+            alternativeDecorator.append(
+                AlternativeDecorator(
+                    .result(
+                        AlternativeResultCellDataConfigurator(
+                            theBestResultRows: theBestResultRows,
+                            incomparableResultRows: incomparableResultRows,
+                            theWorstResultRows: theWorstResultRows
+                        )
+                    )
+                )
+            )
         }
         updateAction(alternativeDecorator)
     }

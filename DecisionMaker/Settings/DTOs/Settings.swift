@@ -12,22 +12,16 @@ struct Settings: DecisionMakerInputDataSettable {
     let secondCriterion: Int
     let thirdCriterion: Int
     let fourthCriterion: Int
-    let theBestAlternative: Int
-    let incomparableAlternative: Int
-    let theWorstAlternative: Int
+    let selectedAlternative: Int
     
     init(
         inputData: DecisionMakerInputData,
-        theBestAlternative: Int,
-        incomparableAlternative: Int,
-        theWorstAlternative: Int
+        selectedAlternative: Int
     ) {
         firstCriterion = inputData.firstCriterion
         secondCriterion = inputData.secondCriterion
         thirdCriterion = inputData.thirdCriterion
         fourthCriterion = inputData.fourthCriterion
-        self.theBestAlternative = theBestAlternative
-        self.incomparableAlternative = incomparableAlternative
-        self.theWorstAlternative = theWorstAlternative
+        self.selectedAlternative = selectedAlternative
     }
 }
